@@ -58,7 +58,7 @@ void Multiplex7Seg::set(byte _enableZB, byte _noOfDigits, byte *digitPins, byte 
 {
 	float prescaler = 0.0;
 	
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || (__AVR_ATmega1280__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || (__AVR_ATmega1280__) || (__AVR_ATmega2560__)
 	TIMSK2 &= ~(1<<TOIE2);
 	TCCR2A &= ~((1<<WGM21) | (1<<WGM20));
 	TCCR2B &= ~(1<<WGM22);
@@ -121,7 +121,7 @@ void Multiplex7Seg::set(byte _enableZB, byte _noOfDigits, byte *digitPins, byte 
 	
 	count = 0;
 	overflowing = 0;
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || (__AVR_ATmega1280__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || (__AVR_ATmega1280__) || (__AVR_ATmega2560__)
 	TCNT2 = tcnt2;
 	TIMSK2 |= (1<<TOIE2);
 #elif defined (__AVR_ATmega128__)
@@ -134,10 +134,13 @@ void Multiplex7Seg::set(byte _enableZB, byte _noOfDigits, byte *digitPins, byte 
 
 	msecs = 3;
 	byte i;
-  for (i = 0; i < _noOfDigits; i++) // initialize digit pins as OUTPUTS
-    pinMode(digitPins[i], OUTPUT);
-  for (i = 0; i < 7; i++) // initialize segment pins as OUTPUTS
+  for (i = 0; i < _noOfDigits; i++) { // initialize digit pins as OUTPUTS
+    pinMode(digitPins[i], OUTPUT);    
+  }
+  for (i = 0; i < 7; i++) { // initialize segment pins as OUTPUTS
     pinMode(segmentPins[i], OUTPUT); 
+  }
+  
 	enableZB = _enableZB; // set zero leading blanking - 0 == OFF,  1 == ON
 	noOfDigits = _noOfDigits; 
 	digitsPtr = digits; // initialize digits pointer
@@ -295,7 +298,7 @@ void Multiplex7Seg::update() // interrupt activates update()
 
 ISR(TIMER2_OVF_vect) 
 {
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || (__AVR_ATmega1280__)
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || (__AVR_ATmega1280__) || (__AVR_ATmega2560__)
 	TCNT2 = Multiplex7Seg::tcnt2;
 #elif defined (__AVR_ATmega128__)
 	TCNT2 = Multiplex7Seg::tcnt2;
